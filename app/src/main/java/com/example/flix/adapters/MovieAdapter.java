@@ -16,6 +16,12 @@ import com.example.flix.models.Movie;
 
 import java.util.List;
 import android.content.Context;
+import com.bumptech.glide.request.target.Target;
+import android.content.Intent;
+import android.widget.Toast;
+
+import org.parceler.Parcels;
+import com.example.flix.MovieDetailsActivity;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
@@ -31,6 +37,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View movieView = LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false);
         return new ViewHolder(movieView);
     }
@@ -38,7 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     //Involves populating data into the item through the holder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //Get the movie at the passed in position
+
         Movie movie = movies.get(position);
         //Bind the movie data into the VH
         holder.bind(movie);
@@ -50,7 +57,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         return movies.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvTitle;
         TextView tvOverview;
@@ -61,9 +68,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Movie movie) {
+            //Loads placeholder images
+
+            //Checks if landscape
+            if ( context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                // then image URL = backdrop image
+                Glide.with(context).load("https://courses.codepath.org/course_files/android_university_fast_track/assets/flicks_backdrop_placeholder.gif").override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivPoster);
+            }
+            else{
+                Glide.with(context).load("https://courses.codepath.org/course_files/android_university_fast_track/assets/flicks_movie_placeholder.gif").override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivPoster);
+            }
+
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
             String imageUrl;
@@ -81,5 +100,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         }
 
 
+        @Override
+        public void onClick(View v) {
+            //gets position
+            int position = getAdapterPosition();
+
+            Toast.makeText(context, "Movie selected", Toast.LENGTH_SHORT).show();
+            //checks if position is valid
+            if (position != RecyclerView.NO_POSITION){
+                // gets movie at position
+                Movie movie = movies.get(position);
+                // creates intent for  new activity
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                // uses parceler
+                intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(movie));
+                // shows activity
+                context.startActivity(intent);
+            }
+        }
     }
 }

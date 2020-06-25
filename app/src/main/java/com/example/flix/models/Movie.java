@@ -3,21 +3,32 @@ package com.example.flix.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import org.parceler.Parcel;
 
+@Parcel
 public class Movie {
 
     String backdropPath;
     String posterPath;
     String title;
     String overview;
+    Double voteAverage;
+    String releaseDate;
 
-    public Movie(JSONObject jsonObject) throws JSONException {
-        backdropPath= jsonObject.getString("backdrop_path");
-        posterPath = jsonObject.getString("poster_path");
-        title = jsonObject.getString("title");
-        overview = jsonObject.getString("overview");
+    public Movie() {
+    }
+
+    public Movie(JSONObject movie) throws JSONException {
+        title = movie.getString("title");
+        overview = movie.getString("overview");
+        posterPath = movie.getString("poster_path");
+        backdropPath = movie.getString("backdrop_path");
+        voteAverage = movie.getDouble("vote_average");
+        releaseDate = movie.getString("release_date");
     }
 
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
@@ -42,5 +53,13 @@ public class Movie {
 
     public String getOverview() {
         return overview;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
     }
 }
