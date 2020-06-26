@@ -27,6 +27,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Headers;
 import okhttp3.internal.http2.Header;
 
 
@@ -73,19 +74,29 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        /*client.get("https://api.themoviedb.org/3/movie/"+movie.getId()+"/videos?api_key="+"AIzaSyDicWVHZnY9XPa0ftRP1WILP1zL6xjRBNQ", new JsonHttpResponseHandler() {
+        params.put(API_KEY_PARAM, getString(R.string.api_key));
+        /*client.get("https://api.themoviedb.org/3/movie/"+movie.getId()+"/videos?api_key="+"AIzaSyDicWVHZnY9XPa0ftRP1WILP1zL6xjRBNQ", params, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONObject jsonObject = json.jsonObject;
                 try {
-                    JSONArray results = response.getJSONArray("results");
-                    if (results != null) {
-                        videoId = results.getJSONObject(0).getString("key");
-                    }
+                    String youtubekey =jsonObject.getJSONArray("results").getJSONObject(0).getString("key");
+                    //JSONArray results = json.getJSONArray("results").getJSONObject(0).getString();
+                    //if (results != null) {
+                    //    videoId = results.getJSONObject(0).getString("key");
+                    //}
+                    Log.i("test", youtubekey);
                     Log.i(TAG, String.format("Loaded trailer video"));
                 } catch (JSONException e) {
-                    log.e("Failed to parse trailer video", e, true);
+                    Log.e(TAG, String.format("Error"));
                 }
-            });*/
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e(TAG, "Failed to get trailer for movie");
+            }
+        });*/
         image_view.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -94,6 +105,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
 
     }
 }
