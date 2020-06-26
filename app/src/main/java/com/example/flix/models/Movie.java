@@ -18,6 +18,7 @@ public class Movie {
     String overview;
     Double voteAverage;
     String releaseDate;
+    Boolean adult;
 
     public Movie() {
     }
@@ -29,6 +30,7 @@ public class Movie {
         backdropPath = movie.getString("backdrop_path");
         voteAverage = movie.getDouble("vote_average");
         releaseDate = movie.getString("release_date");
+        adult = movie.getBoolean("adult");
     }
 
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
@@ -61,5 +63,8 @@ public class Movie {
 
     public Double getVoteAverage() {
         return voteAverage;
+    }
+    public Boolean getAdult(){
+        return adult;
     }
 }

@@ -23,6 +23,8 @@ import android.widget.Toast;
 import org.parceler.Parcels;
 import com.example.flix.MovieDetailsActivity;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     Context context;
@@ -72,6 +74,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         }
 
         public void bind(Movie movie) {
+            int radius = 30, margin = 10;
             //Loads placeholder images
 
             //Checks if landscape
@@ -96,7 +99,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             else{
                 imageUrl = movie.getPosterPath();
             }
-            Glide.with(context).load(imageUrl).into(ivPoster);
+            Glide.with(context).load(imageUrl).transform(new RoundedCornersTransformation(radius, margin)).into(ivPoster);
         }
 
 
@@ -105,11 +108,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             //gets position
             int position = getAdapterPosition();
 
-            Toast.makeText(context, "Movie selected", Toast.LENGTH_SHORT).show();
             //checks if position is valid
             if (position != RecyclerView.NO_POSITION){
                 // gets movie at position
                 Movie movie = movies.get(position);
+
+                Toast.makeText(context, "Movie selected", Toast.LENGTH_SHORT).show();
                 // creates intent for  new activity
                 Intent intent = new Intent(context, MovieDetailsActivity.class);
                 // uses parceler
